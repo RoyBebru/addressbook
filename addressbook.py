@@ -22,11 +22,12 @@ from comment import Comment
 from name import Name, NameException
 from phone import Phone, PhoneException
 
+
 """CONSTANTS"""
 path = Path(sys.argv[0])
 SCRIPT_NAME = path.name
 SCRIPT_DIR = path.parent.resolve()
-ADDRESSBOOK_PATHFILE = SCRIPT_DIR / (path.stem + ".pb")
+ADDRESSBOOK_PATHFILE = SCRIPT_DIR / (path.stem + ".ab")
 HISTFILE = SCRIPT_DIR / (path.stem + ".history")
 
 
