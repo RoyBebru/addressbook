@@ -270,7 +270,7 @@ class AddressBook(UserDict):
         for (name, record) in self.data.items():
             rec_list = list(record.as_tuple_of_tuples())
             rec_list.sort(reverse=True, key=lambda it: it[0])
-            ab[str(name)] = dict(rec_list)
+            ab[str(name)] = rec_list
         return ab
 
 def command_error_catcher(cmd_hundler):
@@ -517,9 +517,9 @@ def load_addressbook():
         return ()
     
     ab_as_tuple = ()
-    for (name, record) in ab.items():
-        ab_as_tuple += ( ((name,) + tuple((title, value)
-                        for (title, value) in record.items())), )
+    for (name, record_list_of_list) in ab.items():
+        ab_as_tuple += ( ((name,) + tuple((pair[0], pair[1])
+                        for pair in record_list_of_list)), )
     return ab_as_tuple
 
 
