@@ -19,46 +19,42 @@ class NameException(Exception):
 
 class Name(Field):
     # Common pattern for each object
-    _c_pattern_name = (r"\b\w(?![0-9_])"
+    pattern_name = (r"\b\w(?![0-9_])"
                        r"(?:(?<![0-9_])(?:\w|['-])(?![0-9_]))*"
                        r"(:?\w(?![0-9_]))?\b") # one word name pattern
     # Name consists of 1..3 words each can contain "'" or "-" in the middle
-    _c_pattern_name = re.compile(_c_pattern_name
-                        + r"(?:\s" + _c_pattern_name
-                        + r"(?:\s" + _c_pattern_name + r")?"
+    pattern_name = re.compile(pattern_name
+                        + r"(?:\s" + pattern_name
+                        + r"(?:\s" + pattern_name + r")?"
                         + r")?", re.IGNORECASE) # up to 3 word name pattern
 
     def __init__(self, name):
         super().__init__(value=name, title="Name", order=10)
         if bool(name):
-            self.name = name # to validate non empty name
+            self.value = name # to validate non empty name
 
     @property
-    def name(self):
-        return self.value
+    def value(self):
+        return self._value
 
-    @name.setter
-    def name(self, name):
+    @value.setter
+    def value(self, name):
         name = self.normalize(name)
-        error_message = self.verify(name)
-        if bool(error_message):
-            # Exception in the constructor does not create object
-            raise NameException(error_message)
+        self.verify(name)
         # Name is proven and can be stored
-        # old_name = self._value
-        self.value = name
+        self._value = name
 
     def verify(self, name: str) -> bool:
         """Check name format"""
-        m = Name._c_pattern_name.search(name)
+        m = Name.pattern_name.search(name)
         if not bool(m):
-            return f"incorrect name '{name}'"
+            NameException(f"incorrect name '{name}'")
         if m.start() != 0:
-            return f"extra symbol(s) '{name[:m.start()]}' in the start"
+            NameException(f"extra symbol(s) '{name[:m.start()]}' in the start")
         if m.end() != len(name):
-            return f"extra symbol(s) '{name[m.start():]}' in the end"
+            NameException(f"extra symbol(s) '{name[m.start():]}' in the end")
         # Name is proven
-        return "" # name is verified
+        return None # name is verified
 
     def normalize(self, name) -> str:
         # Removing start/end spaces and change many spaces with one
@@ -68,9 +64,9 @@ class Name(Field):
     def __eq__(self, name):
         """Case insensitive equal by words combination"""
         words2 = self.normalize(name)
-        if len(words2) != len(self.name):
+        if len(words2) != len(str(self)):
             return False
-        words1 = self.name.lower().split(' ')
+        words1 = str(self).lower().split(' ')
         words2 = words2.lower().split(' ')
         for word1 in words1:
             for word2 in words2:
@@ -86,7 +82,8 @@ class Name(Field):
         return not self == name
 
     def is_substr(self, name):
-        words1 = self.name.lower().split(' ')
+        """Smart compare names"""
+        words1 = str(self).lower().split(' ')
         words2 = self.normalize(name).lower().split(' ')
         for w1 in range(len(words1)):
             for w2 in range(len(words2)):
@@ -110,7 +107,7 @@ class Name(Field):
         return False
 
     def __hash__(self):
-        return self.name.__hash__()
+        return str(self).__hash__()
 
 if __name__ == "__main__":
     p1 = Name("Вал'янець-Кал'янов Мар'ян Дем'янович")

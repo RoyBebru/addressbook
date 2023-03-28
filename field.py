@@ -8,13 +8,14 @@ License: MIT
 
 class Field:
 
-    def __init__(self, value = "", title="", order=0):
+    def __init__(self, value = "", title="", order=0, is_unique=False):
         # Field title, such as "Phone", "E-mail", "Name", etc
         self.title = title
         # Field to sort
         self.order = order
         self._value = ""
         self.value = value
+        self.is_unique = is_unique
 
     @property
     def value(self):

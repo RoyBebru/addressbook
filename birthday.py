@@ -21,7 +21,7 @@ class BirthdayException(Exception):
 class Birthday(Field):
     # Common pattern for each object
     def __init__(self, birthday=""):
-        super().__init__(value=birthday, title="Birthday", order=80)
+        super().__init__(value=birthday, title="Birthday", order=80, is_unique=True)
         if bool(birthday):
             self.value = birthday # to validate non epmpty birthday
 

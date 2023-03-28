@@ -20,14 +20,14 @@ class PhoneException(Exception):
 
 class Phone(Field):
     # Common pattern for each object
-    _c_pattern_phone_number = re.compile(
+    pattern_phone_number = re.compile(
             r"(?:\+\d{1,3})?\s*(?:\(\d{2,5}\)|\d{2,5})?"
             r"\s*\d{1,3}(?:\s*-)?\s*\d{1,3}(?:\s*-)?\s*\d{1,3}")
 
     def __init__(self, phone=""):
         super().__init__(value=phone, title="Phone", order=30)
         if bool(phone):
-            self.phone = phone # to validate non epmpty phone number
+            self.value = phone # to validate non epmpty phone number
 
     @property
     def value(self):
@@ -41,12 +41,11 @@ class Phone(Field):
             # Exception in the constructor does not create object
             raise PhoneException(error_message)
         # Phone number is proven and can be stored
-        # old_phone = self._value
         self._value = phone
 
     def verify(self, phone: str) -> bool:
         """Check phone format"""
-        m = Phone._c_pattern_phone_number.search(phone)
+        m = Phone.pattern_phone_number.search(phone)
         if not bool(m):
             return f"incorrect number '{phone}'"
         if m.start() != 0:
@@ -68,7 +67,7 @@ class Phone(Field):
         return "".join(filter(str.isdigit, text))
 
     def __eq__(self, phone):
-        if self._get_digits_from_str(self.phone) \
+        if self._get_digits_from_str(str(self)) \
                 == self._get_digits_from_str(str(phone)):
             return True
         return False
