@@ -1,4 +1,4 @@
-"""Record
+"""Class Record
 
 Author: Dmytro Tarasiuk
 URL: https://github.com/RoyBebru/addressbook

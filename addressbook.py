@@ -1,4 +1,4 @@
-"""AddressBook
+"""Class AddressBook
 
 Author: Dmytro Tarasiuk
 URL: https://github.com/RoyBebru/addressbook

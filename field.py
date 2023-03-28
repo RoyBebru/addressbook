@@ -1,10 +1,11 @@
-"""Class Name
+"""Class Field
 
 Author: Dmytro Tarasiuk
 URL: https://github.com/RoyBebru/addressbook
 Email: RoyBebru@gmail.com
 License: MIT
 """
+
 
 class Field:
 
